@@ -10,9 +10,6 @@ public class Crime {
     private UUID mId;
     private String mTittle;
 
-    public UUID getmId() {
-        return mId;
-    }
 
     public UUID getId() {
         return mId;
