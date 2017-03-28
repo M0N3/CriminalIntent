@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public class Crime {
     private UUID mId;
-    private String mTittle;
+    private String mTitle;
     private Date mDate;
     private boolean mSolved;
 
@@ -40,11 +40,11 @@ public class Crime {
         return mId;
     }
 
-    public String getTittle() {
-        return mTittle;
+    public String getTitle() {
+        return mTitle;
     }
 
-    public void setTittle(String tittle) {
-        mTittle = tittle;
+    public void setTitle(String title) {
+        mTitle = title;
     }
 }
