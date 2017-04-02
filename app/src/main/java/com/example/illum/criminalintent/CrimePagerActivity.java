@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.UUID;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by illum on 4/2/2017.
@@ -22,8 +23,8 @@ import butterknife.BindView;
 public class CrimePagerActivity extends FragmentActivity {
 
 
-  //  @BindView(R.id.activity_crime_pager_view_pager) - nullPointerException?????
-   private ViewPager mViewPager;
+    @BindView(R.id.activity_crime_pager_view_pager)
+    ViewPager mViewPager;
 
     private List<Crime> mCrimes;
     private static final String EXTRA_CRIME_ID =
@@ -39,9 +40,11 @@ public class CrimePagerActivity extends FragmentActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_crime_pager);
-        mViewPager = (ViewPager)findViewById(R.id.activity_crime_pager_view_pager);
+        ButterKnife.bind(this);
+        mViewPager = (ViewPager) findViewById(R.id.activity_crime_pager_view_pager);
         UUID crimeID = (UUID) getIntent().getSerializableExtra(EXTRA_CRIME_ID);
         mCrimes = CrimeLab.get(this).getCrimes();
+
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         mViewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {
