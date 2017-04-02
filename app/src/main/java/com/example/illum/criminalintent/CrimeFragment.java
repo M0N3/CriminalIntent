@@ -15,6 +15,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 
 import java.text.DateFormat;
+import java.util.UUID;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -24,7 +25,15 @@ import butterknife.ButterKnife;
  */
 
 public class CrimeFragment extends Fragment {
+    private static final String ARG_CRIME_ID = "crime_id";
     private Crime mCrime;
+    private static int lastModifiedCrimePosition;
+
+
+    public static int getLastModifiedCrimePosition() {
+        return lastModifiedCrimePosition;
+    }
+
     @BindView(R.id.crime_title)
     EditText mTitleField;
 
@@ -34,12 +43,19 @@ public class CrimeFragment extends Fragment {
     @BindView(R.id.crime_solved)
     CheckBox mSolvedCheckBox;
 
+    public static CrimeFragment newInstance(UUID crimeId) {
+        Bundle args = new Bundle();
+        args.putSerializable(ARG_CRIME_ID, crimeId);
+        CrimeFragment fragment = new CrimeFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_crime, container, false);
         ButterKnife.bind(this, v);
-
         mTitleField.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -56,22 +72,27 @@ public class CrimeFragment extends Fragment {
 
             }
         });
+        mTitleField.setText(mCrime.getTitle());
 
         mDateButton.setText(DateFormat.getDateInstance(DateFormat.FULL).format(mCrime.getDate()));
         mDateButton.setEnabled(false);
 
+        mSolvedCheckBox.setChecked(mCrime.isSolved());
         mSolvedCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 mCrime.setSolved(isChecked);
             }
         });
+
         return v;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mCrime = new Crime();
+        UUID crimeId = (UUID) getArguments().getSerializable(ARG_CRIME_ID);
+        mCrime = CrimeLab.get(getActivity()).getCrime(crimeId);
+        lastModifiedCrimePosition = CrimeLab.get(getActivity()).getCrimes().indexOf(mCrime);
     }
 }
