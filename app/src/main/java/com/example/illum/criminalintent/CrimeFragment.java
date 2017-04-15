@@ -2,14 +2,19 @@ package com.example.illum.criminalintent;
 
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -34,6 +39,11 @@ public class CrimeFragment extends Fragment {
     private static final int REQUEST_DATE = 0;
     private Crime mCrime;
     private static int lastModifiedCrimePosition;
+    private static boolean lastModifiedCrimeIsDeleted = false;
+
+    public static boolean isLastModifiedCrimeIsDeleted() {
+        return lastModifiedCrimeIsDeleted;
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -71,6 +81,50 @@ public class CrimeFragment extends Fragment {
         CrimeFragment fragment = new CrimeFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.single_fragment_crime, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_item_delete_crime:
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
+                        .setTitle(R.string.dialog_delete_crime)
+                        .setIcon(R.drawable.ic_delete_crime_black)
+                        .setMessage(R.string.dialog_are_you_sure)
+                        .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                CrimeLab crimeLab = CrimeLab.get(getActivity());
+                                lastModifiedCrimePosition = CrimeLab.get(getActivity()).getCrimes().indexOf(mCrime);
+                                crimeLab.getCrimes().remove(mCrime);
+                                lastModifiedCrimeIsDeleted = true;
+                                getActivity().finish();
+                            }
+                        })
+                        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        });
+                AlertDialog dialog = builder.create();
+                dialog.show();
+
+
+//                Crime crime = new Crime();
+//                CrimeLab.get(getActivity()).addCrime(crime);
+//                Intent intent = CrimePagerActivity.newItent(getActivity(), crime.getId());
+//                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Nullable
@@ -124,5 +178,6 @@ public class CrimeFragment extends Fragment {
         UUID crimeId = (UUID) getArguments().getSerializable(ARG_CRIME_ID);
         mCrime = CrimeLab.get(getActivity()).getCrime(crimeId);
         lastModifiedCrimePosition = CrimeLab.get(getActivity()).getCrimes().indexOf(mCrime);
+        setHasOptionsMenu(true);
     }
 }

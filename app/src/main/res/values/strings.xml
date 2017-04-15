@@ -9,4 +9,9 @@
     <string name="show_subtitle">Show Subtitle</string>
     <string name="hide_subtitle">Hide Subtitle</string>
     <string name="subtitle_format">%1$s crimes</string>
+    <string name="menu_delete_crime">Delete crime</string>
+    <string name="dialog_delete_crime">Delete crime?</string>
+    <string name="dialog_are_you_sure">Are you sure?</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
 </resources>

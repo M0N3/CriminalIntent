@@ -36,6 +36,7 @@ public class CrimeListFragment extends Fragment {
 
     private CrimeAdapter mAdapter;
     private boolean mSubtitleVisible;
+
     @Override
     public void onResume() {
         super.onResume();
@@ -75,6 +76,9 @@ public class CrimeListFragment extends Fragment {
         if (mAdapter == null) {
             mAdapter = new CrimeAdapter(crimes);
             mCrimeRecyclerView.setAdapter(mAdapter);
+        } else if (CrimeFragment.isLastModifiedCrimeIsDeleted()) {
+            mAdapter.notifyItemRemoved(CrimeFragment.getLastModifiedCrimePosition() - 1);
+            mAdapter.notifyItemRangeChanged(CrimeFragment.getLastModifiedCrimePosition() - 1, crimeLab.getCrimes().size());
         } else {
             mAdapter.notifyItemChanged(CrimeFragment.getLastModifiedCrimePosition() - 1);
         }
