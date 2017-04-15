@@ -1,6 +1,7 @@
 package com.example.illum.criminalintent;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -33,9 +34,12 @@ public class CrimeListFragment extends Fragment {
 
     @BindView(R.id.crime_recycler_view)
     RecyclerView mCrimeRecyclerView;
+    @BindView(R.id.empty_text_view)
+    TextView emptyListText;
 
     private CrimeAdapter mAdapter;
     private boolean mSubtitleVisible;
+
 
     @Override
     public void onResume() {
@@ -54,6 +58,7 @@ public class CrimeListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_crime_list, container, false);
         ButterKnife.bind(this, v);
+        updateEmptyText();
         mCrimeRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         if (savedInstanceState != null) {
             mSubtitleVisible = savedInstanceState.getBoolean
@@ -61,6 +66,13 @@ public class CrimeListFragment extends Fragment {
         }
         updateUI();
         return v;
+    }
+
+    private void updateEmptyText() {
+        if (CrimeLab.get(getActivity()).getCrimes().size() == 0)
+            emptyListText.setVisibility(View.VISIBLE);
+        else
+            emptyListText.setVisibility(View.INVISIBLE);
     }
 
 
@@ -83,12 +95,13 @@ public class CrimeListFragment extends Fragment {
             mAdapter.notifyItemChanged(CrimeFragment.getLastModifiedCrimePosition() - 1);
         }
         updateSubtitle();
+        updateEmptyText();
     }
 
     private void updateSubtitle() {
         CrimeLab crimeLab = CrimeLab.get(getActivity());
         int crimeCount = crimeLab.getCrimes().size();
-        String subtitle = getString(R.string.subtitle_format, crimeCount);
+        String subtitle = getResources().getQuantityString(R.plurals.subtitle_plural, crimeCount, crimeCount);
         if (!mSubtitleVisible) {
             subtitle = null;
         }

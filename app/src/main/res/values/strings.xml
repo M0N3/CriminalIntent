@@ -14,4 +14,9 @@
     <string name="dialog_are_you_sure">Are you sure?</string>
     <string name="cancel">Cancel</string>
     <string name="delete">Delete</string>
+    <string name="empty_text">Press + to add new crime</string>
+    <plurals name="subtitle_plural">
+        <item quantity="one">%1$s crime</item>
+        <item quantity="other">%1$s crimes</item>
+    </plurals>
 </resources>
