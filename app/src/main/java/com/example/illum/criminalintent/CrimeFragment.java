@@ -101,8 +101,8 @@ public class CrimeFragment extends Fragment {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 CrimeLab crimeLab = CrimeLab.get(getActivity());
-                                lastModifiedCrimePosition = CrimeLab.get(getActivity()).getCrimes().indexOf(mCrime);
-                                crimeLab.getCrimes().remove(mCrime);
+                                lastModifiedCrimePosition = CrimeLab.get(getActivity()).getIndexOf(mCrime.getId());
+                                crimeLab.deleteCrime(mCrime);
                                 lastModifiedCrimeIsDeleted = true;
                                 getActivity().finish();
                             }
@@ -115,12 +115,10 @@ public class CrimeFragment extends Fragment {
                         });
                 AlertDialog dialog = builder.create();
                 dialog.show();
-
-
-//                Crime crime = new Crime();
-//                CrimeLab.get(getActivity()).addCrime(crime);
-//                Intent intent = CrimePagerActivity.newItent(getActivity(), crime.getId());
-//                startActivity(intent);
+                return true;
+            case android.R.id.home:
+                lastModifiedCrimePosition = CrimeLab.get(getActivity()).getIndexOf(mCrime.getId());
+                getActivity().finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -173,11 +171,18 @@ public class CrimeFragment extends Fragment {
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        CrimeLab.get(getActivity())
+                .updateCrime(mCrime);
+    }
+
+    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         UUID crimeId = (UUID) getArguments().getSerializable(ARG_CRIME_ID);
         mCrime = CrimeLab.get(getActivity()).getCrime(crimeId);
-        lastModifiedCrimePosition = CrimeLab.get(getActivity()).getCrimes().indexOf(mCrime);
+
         setHasOptionsMenu(true);
     }
 }
