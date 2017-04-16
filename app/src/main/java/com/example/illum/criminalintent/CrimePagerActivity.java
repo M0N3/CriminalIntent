@@ -21,7 +21,7 @@ import butterknife.ButterKnife;
  * Created by illum on 4/2/2017.
  */
 
-public class CrimePagerActivity extends AppCompatActivity {
+public class CrimePagerActivity extends AppCompatActivity implements CrimeFragment.Callbacks {
 
 
     @BindView(R.id.activity_crime_pager_view_pager)
@@ -31,7 +31,7 @@ public class CrimePagerActivity extends AppCompatActivity {
     private static final String EXTRA_CRIME_ID =
             "com.example.illum.criminalintent.crime_id";
 
-    public static Intent newItent(Context packegeContext, UUID crimeId) {
+    public static Intent newIntent(Context packegeContext, UUID crimeId) {
         Intent intent = new Intent(packegeContext, CrimePagerActivity.class);
         intent.putExtra(EXTRA_CRIME_ID, crimeId);
         return intent;
@@ -66,5 +66,10 @@ public class CrimePagerActivity extends AppCompatActivity {
                 break;
             }
         }
+    }
+
+    @Override
+    public void onCrimeUpdated(Crime crime) {
+
     }
 }
